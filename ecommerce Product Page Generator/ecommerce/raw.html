@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Ecommerce Raw Php</title>
+</head>
+<body>
+<script type="text/javascript">
+	alert("Note Remove All '@' From the Html Codes\nPress 'alt + back' to go back to Prev Page")
+</script>
+<pre>
+	
+		require 'config.php';
+		// ===================================
+		
+		//    Pagination Code Starts
+		
+		// ===================================
+
+		$record_per_page = 12; //Products That can stay on A page is 12
+		
+		$page = ''; //page equal = null
+
+		if(isset($_GET["page"]))
+		{
+		 $page = $_GET["page"]; // get page
+		}
+		else
+		{
+		 $page = 1; // else page equal to one 
+		}
+
+		$start_from = ($page-1) * $record_per_page; // limit of a page 
+
+		$query = "SELECT * FROM tbl_ecommerce order by id DESC LIMIT $start_from, $record_per_page"; ////SELECT * FROM database table 'real_house_estate' in a descending order using the id row then LIMIT $start_from offset $record_per_page
+		
+		$result = mysqli_query($con, $query);// stores each sql query  into a variable
+
+		while($row = mysqli_fetch_array($result))//loop through $result i.e when there is a database connection and a database table is selected then fetch result and store it as an array
+		{
+
+			 echo '<@img style="height: 250px;width: 226px;" src="upload/'.$row['image'].'">';//set product image 
+			 echo $row["name"];
+			 echo '₦'.$row["price"]; // print table row size
+
+            echo '<@input type="num" name="quantity" placeholder="Enter Quantity Of Goods You Want" class="form-control" />';//change only class or style when editing
+            echo'<@input type="hidden" name="hidden_name" value=" echo $row["name"]; " />
+            <@input type="hidden" name="hidden_price" value=" echo $row["price"]; " />
+';//this hidden fields help with the calculation of goods
+            echo '<@input type="submit" name="add_to_cart" style="margin-top:5px;" class="btn btn-success" value="Add to Cart" />';//add to cart button
+
+		}
+
+	    $page_query = "SELECT * FROM tbl_ecommerce ORDER BY id DESC";// SELECT * FROM database table 'real_house_estate' in a descending order using the id row 
+	    $page_result = mysqli_query($con, $page_query);// stores each sql query  into a variable
+	    $total_records = mysqli_num_rows($page_result);// stores sql query  into a variable
+	    $total_pages = ceil($total_records/$record_per_page); // up calculates the number of pages you have and rounds it  
+
+	    for ($i=1; $i <= $total_pages ; $i++) { //number of page equal to 1 by default then if pages are less than or equal to number of pages due to pagination then number of page + 1 
+	    	echo '<@a href="product.php?page='.$i.'">page '.$i.' </@a>';//prints  out all the links for all product page
+	    }
+		// ===================================
+		
+		//    Pagination Code ends
+		
+		// ===================================
+
+
+
+
+
+
+		// ===================================
+		
+		//    Cart Code Starts
+		
+		// ===================================
+
+
+		echo'<@div style="clear:both"></@div>
+		      <@br />
+		      <@h3 style="display: block;">Order Details</@h3>
+		      <@div class="table-responsive">
+		        <@table class="table table-bordered">
+		          <@tr>
+		            <@th width="40%">Item Name</@th>
+		            <@th width="10%">Quantity</@th>
+		            <@th width="20%">Price</@th>
+		            <@th width="15%">Total</@th>
+		            <@th width="5%">Action</@th>
+		          </@tr>';//table headed change <@th> width to your taste 
+
+          if(!empty($_SESSION["shopping_cart"]))//if cart is not empty  
+          {
+            $total = 0;
+            foreach($_SESSION["shopping_cart"] as $keys => $values) //display all products in db table
+            {
+          
+          <@tr>
+            <@td> echo $values["item_name"]; </@td><!-- display product name -->
+            <@td> echo $values["item_quantity"]; </@td><!-- display product Quantity -->
+            <@td>$  echo $values["item_price"]; </@td>
+            <@td>$  echo number_format($values["item_quantity"] * $values["item_price"], 2);</@td>
+            <@td><@a href="product.php?action=delete&id= echo $values["item_id"]; "><@span class="text-danger">Remove</@span></@a></@td>
+          </@tr>
+          
+              $total = $total + ($values["item_quantity"] * $values["item_price"]);//calculate products
+            }
+          
+          <@tr>
+            <@td colspan="3" align="right">Total</@td>
+            <@td align="right">₦  echo number_format($total, 2); </@td> <!-- display products total price -->
+            <@td></@td>
+          </@tr>
+          
+          }
+          
+            
+        </@table>
+      </@div>
+
+
+
+</pre>
+
+</body>
+</html>

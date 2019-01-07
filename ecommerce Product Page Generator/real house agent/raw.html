@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Real Estate Raw Php</title>
+	    <link rel="stylesheet" href="css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="css/animate.css"/>
+    <link rel="stylesheet" href="css/owl.carousel.css"/>
+    <link rel="stylesheet" href="css/style.css"/>
+</head>
+<script type="text/javascript">
+	alert("Note Remove All '@' From the Html Codes\nPress 'alt + back' to go back to Prev Page")
+</script>
+<body class="nav-dark">
+<div class="col-md-12" >
+	<pre>
+		require 'config.php';
+		// ===================================
+		
+		//    Pagination Code Starts
+		
+		// ===================================
+
+		$record_per_page = 12; //Products That can stay on A page is 12
+		
+		$page = ''; //page equal = null
+
+		if(isset($_GET["page"]))
+		{
+		 $page = $_GET["page"]; // get page
+		}
+		else
+		{
+		 $page = 1; // else page equal to one 
+		}
+
+		$start_from = ($page-1) * $record_per_page; // limit of a page 
+
+		$query = "SELECT * FROM land order by id DESC LIMIT $start_from, $record_per_page"; ////SELECT * FROM database table 'land' in a descending order using the id row then LIMIT $start_from offset $record_per_page
+		
+		$result = mysqli_query($con, $query);// stores each sql query  into a variable
+
+		while($row = mysqli_fetch_array($result))//loop through $result i.e when there is a database connection and a database table is selected then fetch result and store it as an array
+		{
+
+			 echo $row["status"];//print table row status 
+			 echo '<@div data-setbg="upload/'.$row['name'].'"></@div>';//set product image 
+			 echo '<@img src="upload/'.$row['name'].'">';//set product image 
+			 echo $row["address"]; // print table row address
+			 echo $row["address"]; // print table row address
+			 echo $row["size"]; // print table row size
+			 echo $row["bedroom"]; // print table row bedroom 
+			 echo $row["garage"]; // print table row garage
+			 echo $row["bathrooms"]; // print table row bathrooms
+			 echo $row["agent"]; // print table row agents
+			 $dateposted = $row["dates"]; // stores table row dates into variable datposted
+			 $datenow = time(); //gets current time
+			 echo round(( $dateposted - $datenow) / (60 * 60 * - 24)) . " days"; // calaculates the diiference between the day it was posted and userr current time 
+			 echo '₦'.$row["price"]; // print table row size
+		}
+
+	    $page_query = "SELECT * FROM land ORDER BY id DESC";// SELECT * FROM database table 'land' in a descending order using the id row 
+	    $page_result = mysqli_query($con, $page_query);// stores each sql query  into a variable
+	    $total_records = mysqli_num_rows($page_result);// stores sql query  into a variable
+	    $total_pages = ceil($total_records/$record_per_page); // up calculates the number of pages you have and rounds it  
+
+	    for ($i=1; $i <= $total_pages ; $i++) { //number of page equal to 1 by default then if pages are less than or equal to number of pages due to pagination then number of page + 1 
+	    	echo '<@a href="product.php?page='.$i.'">page '.$i.' </@a>';//prints  out all the links for all product page
+	    }
+		// ===================================
+		
+		//    Pagination Code ends
+		
+		// ===================================
+
+
+
+	</pre>
+</div>
+</body>
+</html>
